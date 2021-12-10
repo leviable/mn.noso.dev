@@ -9,6 +9,7 @@ on:
       - 'Noso'
       - 'run.sh'
       - 'config/*'
+      - 'advopt.txt'
 
 jobs:
 
@@ -19,9 +20,6 @@ jobs:
 
     - name: Checkout master
       uses: actions/checkout@master
-
-    - name: Update SHA
-      run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/site/_meta
 
     - name: Build container image
       run: docker build -t ghcr.io/leviable/mn-noso-dev:$(echo $GITHUB_SHA | head -c7) .
@@ -39,7 +37,7 @@ jobs:
         password: ${{ secrets.CR_PAT }}
         
     - name: Push image to Github Container Registry
-      run: docker push ghcr.io/leviable/noso-dev:$(echo $GITHUB_SHA | head -c7)
+      run: docker push ghcr.io/leviable/mn-noso-dev:$(echo $GITHUB_SHA | head -c7)
 
     - name: Update deployment file
       run: |
@@ -55,4 +53,4 @@ jobs:
         kubectl patch svc ingress-nginx-controller --patch "$(cat config/ingress-nginx-controller-svc-patch.yaml)" -n ingress-nginx
 
     - name: Verify deployment
-      run: kubectl rollout status deployment/noso-dev
+      run: kubectl rollout status statefulset/mn-noso-dev

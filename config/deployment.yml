@@ -5,22 +5,22 @@ metadata:
 spec:
   ports:
     - port: 8080
-      targetPort: 8080
+      protocol: TCP
   selector:
     app: mn-noso-dev
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mn-noso-dev
   labels:
     app: mn-noso-dev
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: mn-noso-dev
-  minReadySeconds: 60
+  replicas: 1
+  serviceName: "mn-noso-dev-svc"
   template:
     metadata:
       labels:
@@ -36,6 +36,32 @@ spec:
             cpu: 100m
           limits:
             cpu: 100m
+        # readinessProbe:
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 15
+        #   tcpSocket:
+        #     port: 8080
+        volumeMounts:
+          - mountPath: "/nosomnt"
+            name: mn-noso-dev-pvc
+          - mountPath: "/nosowallet"
+            name: noso-mn-wallet
+            readOnly: true
+      volumes:
+        - name: noso-mn-wallet
+          secret:
+            secretName: noso-mn-wallet
+  volumeClaimTemplates:
+    - metadata:
+        name: mn-noso-dev-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: do-block-storage
+
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

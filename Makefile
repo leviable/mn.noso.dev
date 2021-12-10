@@ -14,7 +14,8 @@ build:
 run:
 	docker run --rm \
 		--name $(APP) \
-		-v $(WORKDIR)/NOSODATA:/app/NOSODATA \
+		-v $(WORKDIR)/NOSODATA/wallet.pkw:/nosowallet/wallet.pkw \
+		-v mn-NOSODATA:/nosomnt \
 		$(APP):latest
 
 .PHONY: stop

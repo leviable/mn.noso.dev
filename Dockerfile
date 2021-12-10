@@ -9,7 +9,10 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends libgtk2.0 xvfb && \
     rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /nosomnt /app/NOSODATA /nosowallet
+
 COPY Noso .
+COPY advopt.txt /app/NOSODATA/advopt.txt
 COPY run.sh .
 
 RUN chmod +x Noso
