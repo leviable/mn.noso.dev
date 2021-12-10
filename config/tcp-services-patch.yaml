@@ -1,0 +1,2 @@
+data:
+  "8080": default/mn-noso-dev-svc:8080:PROXY

@@ -1,0 +1,7 @@
+spec:
+  ports:
+    - appProtocol: tcp
+      name: mn-noso-dev-tcp-8080
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
